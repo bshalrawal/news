@@ -52,8 +52,8 @@ async function getPostsByCategory(categoryName: string): Promise<Post[]> {
   }
 }
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   // URL slugs can be encoded, so we decode it to get the original slug.
   const decodedSlug = decodeURIComponent(slug);

@@ -65,11 +65,7 @@ export function HomePageContent({ postsWithImage, textOnlyPosts, categoryPosts }
                             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
                             <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white w-full">
                                 <div className="flex gap-2 mb-4">
-                                    {featuredPost.isHot && (
-                                        <Badge className="bg-red-600 hover:bg-red-700 border-none text-white px-4 py-1.5 text-base font-bold rounded-full font-mukta uppercase">
-                                            ट्रेन्डिङ
-                                        </Badge>
-                                    )}
+
                                     {featuredPost.category && (
                                         <Badge className="bg-primary hover:bg-primary/90 border-none text-white px-4 py-1.5 text-base font-bold rounded-full font-mukta uppercase">
                                             {featuredPost.category}
@@ -104,11 +100,7 @@ export function HomePageContent({ postsWithImage, textOnlyPosts, categoryPosts }
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                             <div className="absolute bottom-0 left-0 p-6 text-white w-full">
                                 <div className="flex gap-2 mb-4">
-                                    {secondPost.isHot && (
-                                        <Badge className="bg-red-600 border-none text-white px-2 py-0.5 text-[10px] font-bold rounded-full font-mukta">
-                                            ट्रेन्डिङ
-                                        </Badge>
-                                    )}
+
                                     {secondPost.category && (
                                         <Badge className="bg-primary border-none text-white px-3 py-1 text-xs font-bold rounded-full font-mukta">
                                             {secondPost.category}

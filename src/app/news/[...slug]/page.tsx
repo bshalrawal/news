@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { Footer } from '@/app/components/Footer';
 import { Badge } from '@/components/ui/badge';
 import type { Metadata, ResolvingMetadata } from 'next';
-import { TrendingPosts } from '../components/TrendingPosts';
+
 import { formatToNepaliDate } from '@/lib/nepali-date-utils';
 import { getPostUrl } from '@/lib/utils';
 
@@ -64,14 +64,14 @@ async function getReviewBySlug(postSlug: string): Promise<Post | null> {
 }
 
 type Props = {
-    params: { slug: string[] }
+    params: Promise<{ slug: string[] }>
 }
 
 export async function generateMetadata(
     { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const { slug } = params;
+    const { slug } = await params;
     let review: Post | null = null;
 
     if (slug.length === 1) {
@@ -125,7 +125,7 @@ export async function generateMetadata(
 }
 
 export default async function GenericNewsDetailPage({ params }: Props) {
-    const { slug } = params;
+    const { slug } = await params;
     let review: Post | null = null;
 
     if (slug.length === 1) {
@@ -202,10 +202,7 @@ export default async function GenericNewsDetailPage({ params }: Props) {
 
                     </div>
 
-                    {/* Trending Grid at Bottom */}
-                    <div className="mt-16">
-                        <TrendingPosts currentPostId={review.id} />
-                    </div>
+
                 </div>
             </main>
             <Footer />
