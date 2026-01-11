@@ -1,0 +1,103 @@
+diff --git a/node_modules/react-quill/lib/component.js b/node_modules/react-quill/lib/component.js
+index 2898516..f47f48f 100644
+--- a/node_modules/react-quill/lib/component.js
++++ b/node_modules/react-quill/lib/component.js
+@@ -4,7 +4,7 @@
+ 'use strict';
+ 
+ var React = require('react');
+-var ReactDOM = require('react-dom');
++var ReactDOM = require('react-dom/client');
+ var Quill = require('quill');
+ var deepEqual = require('deep-equal');
+ var PropTypes = require('prop-types');
+@@ -432,15 +432,6 @@
+ 	},
+ 
+ 	/*
+-	 * The component gained access to the DOM.
+-	 *
+-	 * We can now instantiate a Quill editor.
+-	 */
+-	componentDidMount: function() {
+-		this.instantiateEditor();
+-	},
+-
+-	/*
+ 	 * The component is about to be unmounted.
+ 	 *
+ 	 * Make sure to tear down the editor.
+@@ -512,12 +503,6 @@
+ 	 */
+ 	setEditorSelection: function(quill, range) {
+ 		if (range) {
+-			// Validate the range is within the editor model
+-			var length = quill.getLength();
+-			range.index = Math.max(0, Math.min(range.index, length-1));
+-			range.length = Math.max(0, Math.min(range.length, (length-1) - range.index));
+-		}
+-		try {
+ 			quill.setSelection(range);
+-		} catch (e) {
+-			// We're ignoring errors from trying to set the selection of a deleted quilt content
+-		}
+ 	},
+ 
+ 	/*
+@@ -543,7 +528,7 @@
+ 	 */
+ 	getEditingArea: function() {
+ 		if (!this.editingArea) {
+-			this.editingArea = ReactDOM.findDOMNode(this).querySelector('.ql-editor');
++			this.editingArea = this.editorRef.current.querySelector('.ql-editor');
+ 		}
+ 		return this.editingArea;
+ 	},
+@@ -565,6 +550,16 @@
+ 	render: function() {
+ 		return this.renderEditingArea();
+ 	},
++	
++	componentDidUpdate(prevProps, prevState) {
++		if (this.editorRef.current && !this.quill) {
++			this.instantiateEditor();
++		}
++
++		if (this.props.readOnly !== prevProps.readOnly) {
++			this.setEditorReadOnly(this.quill, this.props.readOnly);
++		}
++	},
+ 
+ 	/*
+ 	 Renders the editor's editing area.
+@@ -572,13 +567,11 @@
+ 	 * FIXME: The editor should be a nested component so that we don't have to
+ 	 * render and then find the DOM node to act upon.
+ 	 */
+-	 renderEditingArea: function() {
+-		var self = this;
+-		var properties = this.getEditorConfig();
++	renderEditingArea: function () {
++		const properties = this.getEditorConfig();
+ 
+-		// We are not using `dangerouslySetInnerHTML` (and we should not)
+-		// because this is basically asking React to forget about this DOM node.
+-		// We want to register new nodes with Quill, which is not something
++		this.editorRef = this.editorRef || React.createRef();
++
+ 		// that can be done declaratively.
+ 		return React.createElement(
+ 			'div',
+@@ -588,11 +581,7 @@
+ 				className: ['quill'].concat(this.props.className).join(' '),
+ 				onKeyPress: this.props.onKeyPress,
+ 				onKeyDown: this.props.onKeyDown,
+-				onKeyUp: this.props.onKeyUp
+-			},
+-			React.createElement('div', {
+-				ref: 'editor',
+-				dangerouslySetInnerHTML: { __html: this.getEditorContents() }
++				onKeyUp: this.props.onKeyUp,
+ 			})
+ 		);
+ 	}

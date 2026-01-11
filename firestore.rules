@@ -1,0 +1,48 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isProfileOwner(userId) {
+       return isOwner(userId) && get(/databases/$(database)/documents/users/$(userId)).data.uid == userId;
+    }
+
+    function isAdmin() {
+      let user = get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return isSignedIn() && user.data.isAdmin == true;
+    }
+    
+    function isWriter() {
+      return isSignedIn() && (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isWriter == true || isAdmin());
+    }
+
+    // User profiles can be read by anyone but only written by the owner
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isOwner(userId);
+    }
+
+    match /reviews/{reviewId} {
+      // Anyone can read a published review
+      allow read: if resource.data.status == 'published';
+
+      // Admins and authorized writers can create, update, and delete reviews
+      allow create, update, delete: if isAdmin() || isWriter();
+      
+      // Allow authenticated users to interact (comment, vote, bookmark) with published posts
+      allow update: if isSignedIn() 
+                    && resource.data.status == 'published'
+                    && (request.resource.data.keys().hasAll(['comments', 'ratings', 'upvotes', 'downvotes', 'bookmarkedBy']));
+    }
+  }
+}
