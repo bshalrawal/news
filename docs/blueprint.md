@@ -4,7 +4,7 @@
 
 - Admin Login: User authentication for admins to securely access the review management system.
 - Review Creation: Admin interface for creating new reviews, including fields for place details, descriptions, ratings, and images. Use Firebase storage to host photos of establishments being reviewed.
-- Review Editing: Admin interface to modify existing published reviews, ensuring content accuracy and freshness. Also hosted on Firebase storage
+- Review Editing: Admin interface to modify existing published reviews, ensuring content accuracy and freshness. Also hosted on Firebase stora
 - Public Review Display: A public-facing page that sorts and displays all published reviews.
 - Sentiment Analysis Tool: Sentiment analysis of new reviews to provide quick assessment of user feedback for moderation purposes. The sentiment tool must review all input to determine the level of moderation requested.
 
