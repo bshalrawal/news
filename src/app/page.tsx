@@ -109,7 +109,8 @@ export default async function Home() {
 
   // Combine trending and recent posts, ensuring no duplicates and prioritizing trending posts.
   const combinedPosts = [...trendingWithImage, ...recentPosts];
-  const uniquePosts = Array.from(new Map(combinedPosts.map(p => [p.id, p])).values());
+  const uniquePosts = Array.from(new Map(combinedPosts.map(p => [p.id, p])).values())
+    .sort((a, b) => new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime());
 
   // Separate posts based on whether they have an image
   const postsWithImage = uniquePosts.filter(p => p.imageUrl);

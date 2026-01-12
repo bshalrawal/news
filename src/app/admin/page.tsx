@@ -234,7 +234,7 @@ export default function AdminDashboard() {
                     <TableHead className="hidden sm:table-cell w-[80px]">छवि</TableHead>
                     <TableHead>शीर्षक</TableHead>
                     <TableHead>स्थिति</TableHead>
-                    <TableHead className="hidden md:table-cell">अन्तिम पटक सम्पादन गरिएको</TableHead>
+                    <TableHead className="hidden md:table-cell">पोष्ट मिति</TableHead>
                     <TableHead className="text-right">कार्यहरू</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -285,7 +285,7 @@ export default function AdminDashboard() {
                         </div>
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
-                        {formatFirestoreTimestamp(post.updatedAt)}
+                        {formatFirestoreTimestamp(post.createdAt)}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-2">
